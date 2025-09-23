@@ -1,0 +1,37 @@
+# version: '3.8'
+
+services:
+  # The FastAPI Application service
+  api:
+    build: . # Tells Docker Compose to build this image from the Dockerfile in the current directory [2]
+    ports:
+      - "8000:8000" # Maps port 8000 on your local machine to port 8000 inside the container
+    volumes:
+      - ./app:/app # Mounts your local 'app' folder into the container for live code reloading during development
+    environment:
+      # These variables are passed to your application and the database [3]
+      - DATABASE_URL=postgresql+asyncpg://user:password@db/mydatabase
+      - SECRET_KEY=your_super_secret_key_change_me
+    depends_on:
+      - db # Ensures the 'db' container starts before the 'api' container, preventing connection errors [3]
+
+  # The PostgreSQL Database service
+  db:
+    image: postgres:15 # Uses the official PostgreSQL version 15 image from Docker Hub [2]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/ # Mounts a named volume to persist database data across container restarts [3]
+    environment:
+      # Sets the credentials for the PostgreSQL database [3]
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mydatabase
+    ports:
+      - "5432:5432" # Optional: Exposes the database port to your local machine for tools like DBeaver or pgAdmin [4]
+
+  # The Redis Caching service
+  redis:
+    image: redis:7 # Uses the official Redis version 7 image [2]
+
+# Defines the named volume used by the 'db' service to ensure data is not lost [3]
+volumes:
+  postgres_data:

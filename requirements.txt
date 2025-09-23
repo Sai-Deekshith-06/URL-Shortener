@@ -1,0 +1,36 @@
+# # Core FastAPI and server
+# fastapi[all]
+# uvicorn
+# gunicorn
+
+# # Database ORM and async driver for PostgreSQL
+# sqlalchemy[asyncio]
+# asyncpg
+
+# # Pydantic for settings management and data validation
+# pydantic[email]
+# pydantic_settings
+
+# # Security: JWT, password hashing
+# python-jose[cryptography]
+# passlib[bcrypt]
+
+# Core FastAPI and server
+fastapi
+uvicorn
+gunicorn
+
+# Pydantic and settings management (V2+)
+pydantic>=2.0
+pydantic-settings
+
+# Database ORM and async driver for PostgreSQL
+sqlalchemy[asyncio]
+asyncpg
+
+# Security: JWT, password hashing
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==3.2.0
+
+python-multipart
