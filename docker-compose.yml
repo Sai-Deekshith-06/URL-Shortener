@@ -8,10 +8,8 @@ services:
       - "8000:8000" # Maps port 8000 on your local machine to port 8000 inside the container
     volumes:
       - ./app:/app # Mounts your local 'app' folder into the container for live code reloading during development
-    environment:
-      # These variables are passed to your application and the database [3]
-      - DATABASE_URL=postgresql+asyncpg://user:password@db/mydatabase
-      - SECRET_KEY=your_super_secret_key_change_me
+    env_file:
+      - .env
     depends_on:
       - db # Ensures the 'db' container starts before the 'api' container, preventing connection errors [3]
 
@@ -20,11 +18,8 @@ services:
     image: postgres:15 # Uses the official PostgreSQL version 15 image from Docker Hub [2]
     volumes:
       - postgres_data:/var/lib/postgresql/data/ # Mounts a named volume to persist database data across container restarts [3]
-    environment:
-      # Sets the credentials for the PostgreSQL database [3]
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=mydatabase
+    env_file:
+      - .env
     ports:
       - "5432:5432" # Optional: Exposes the database port to your local machine for tools like DBeaver or pgAdmin [4]
 
