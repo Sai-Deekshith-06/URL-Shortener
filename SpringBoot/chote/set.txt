@@ -1,0 +1,11 @@
+# For windows
+
+set $DB_URL=""
+set $DB_USERNAME=""
+set $DB_PASSWORD=""
+
+# For Linux/MacOS
+
+exort DB_URL=""
+exort DB_URL=""
+exort DB_PASSWORD=""
