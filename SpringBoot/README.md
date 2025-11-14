@@ -1,7 +1,7 @@
 # URL Shortener - Chote
 
 - To execute
-1. Set PostgreSQL credentials in `set.bat`/`set.sh` file.
+1. Set PostgreSQL credentials in `set.txt` file and save as `set.bat`/`set.sh`.
 2. 
 ``` bash
 cd ./chote

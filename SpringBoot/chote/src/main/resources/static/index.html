@@ -133,6 +133,7 @@
             cursor: pointer;
             transition: 0.25s;
             font-weight: 600;
+            display: none;
         }
 
         #copyBtn:hover {
@@ -156,16 +157,23 @@
             <a id="shortLink" class="result-link" href="#" target="_blank"></a>
             <br>
             <button id="copyBtn" onclick="copyToClipboard()">Copy URL</button>
+            <p id="error" style="color:#ff6b6b; margin-top:10px; display:none;"></p>
         </div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
+
         document.addEventListener("DOMContentLoaded", () => {
             if (params.has("shortUrl")) {
                 document.getElementById("customCode").value = params.get("shortUrl");
             }
         });
+
+        const resultBox = document.getElementById("result");
+        const linkElement = document.getElementById("shortLink");
+        const errElement = document.getElementById("error");
+        const copyBtn = document.getElementById("copyBtn");
 
         async function shortenUrl() {
             const longUrl = document.getElementById("longUrl").value.trim();
@@ -180,17 +188,31 @@
             if (customCode)
                 apiUrl += "&shortUrl=" + encodeURIComponent(customCode);
 
-            const response = await fetch(apiUrl, { method: "POST" });
-            const code = await response.text();
+            try {
+                const response = await fetch(apiUrl, { method: "POST" });
 
-            const finalUrl = window.location.origin + "/" + code;
+                if (!response.ok) {
+                    const errorJson = await response.json();  // parse JSON
+                    throw new Error(errorJson.message || "Unknown error");
+                }
 
-            const resultBox = document.getElementById("result");
-            const linkElement = document.getElementById("shortLink");
+                const code = await response.text();
+                const finalUrl = window.location.origin + "/" + code;
 
-            linkElement.textContent = finalUrl;
-            linkElement.href = finalUrl;
+                linkElement.textContent = finalUrl;
+                linkElement.href = finalUrl;
 
+                errElement.style.display = "none";
+                copyBtn.style.display = "block";
+
+            } catch (e) {
+                console.error(e);
+                errElement.textContent = "❌ " + e.message;
+                errElement.style.display = "block";
+
+                linkElement.textContent = "";
+                copyBtn.style.display = "none";
+            }
             resultBox.style.display = "block";
         }
 
@@ -198,17 +220,17 @@
             const url = document.getElementById("shortLink").textContent;
 
             navigator.clipboard.writeText(url).then(() => {
-                const btn = document.getElementById("copyBtn");
-                btn.innerText = "Copied!";
-                btn.style.background = "#66ffb8";
+                copyBtn.innerText = "Copied!";
+                copyBtn.style.background = "#66ffb8";
 
                 setTimeout(() => {
-                    btn.innerText = "Copy URL";
-                    btn.style.background = "#00e19a";
+                    copyBtn.innerText = "Copy URL";
+                    copyBtn.style.background = "#00e19a";
                 }, 1500);
             });
         }
     </script>
+
 
 </body>
 

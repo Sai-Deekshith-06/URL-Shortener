@@ -1,4 +1,4 @@
-# For windows
+@REM For windows
 
 set $DB_URL=""
 set $DB_USERNAME=""
